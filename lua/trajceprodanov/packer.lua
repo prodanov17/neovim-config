@@ -17,8 +17,13 @@ return require('packer').startup(function(use)
 		vim.cmd('colorscheme rose-pine')
 	end
 })
+use "nvim-lua/plenary.nvim" -- don't forget to add this one if you don't have it yet!
+use {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    requires = { {"nvim-lua/plenary.nvim"} }
+}
 use('nvim-treesitter/nvim-treesitter', {run = ':TSUpdate'})
-use('ThePrimeagen/harpoon')
 use('mbbill/undotree')
 use('tpope/vim-fugitive')
 use('neovim/nvim-lspconfig')
@@ -30,6 +35,7 @@ use {
         require('Comment').setup()
     end
 }
+use 'nvim-treesitter/nvim-treesitter-context'
 use {
 	'VonHeikemen/lsp-zero.nvim',
 	branch = 'v2.x',
