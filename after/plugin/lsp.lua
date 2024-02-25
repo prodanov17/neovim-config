@@ -7,6 +7,8 @@ lsp.ensure_installed({
   'eslint',
 })
 
+require'lspconfig'.pyright.setup{}
+
 -- Fix Undefined global 'vim'
 lsp.nvim_workspace()
 
