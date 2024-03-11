@@ -7,16 +7,43 @@ return require('packer').startup(function(use)
 	-- Packer can manage itself
     use 'github/copilot.vim'
 	use 'wbthomason/packer.nvim'
+    use 'lewis6991/gitsigns.nvim'
     use {
 		'nvim-telescope/telescope.nvim', tag = '0.1.2',
-		requires = { {'nvim-lua/plenary.nvim'} }
+		requires = { {
+            'nvim-lua/plenary.nvim',
+        } }
 	}
-    use { "briones-gabriel/darcula-solid.nvim", requires = "rktjmp/lush.nvim" }
-	use({ 'rebelot/kanagawa.nvim', as = 'kanagawa', 
+    -- use { "briones-gabriel/darcula-solid.nvim", requires = "rktjmp/lush.nvim" }
+    use({ 'rebelot/kanagawa.nvim', as = 'kanagawa',
 	config = function()
-		vim.cmd('colorscheme darcula-solid ')
+		vim.cmd('colorscheme kanagawa')
 	end
 })
+
+use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" }) -- dependency for better sorting performance
+
+use({
+  'Wansmer/treesj',
+  requires = { 'nvim-treesitter/nvim-treesitter' },
+  config = function()
+    require('treesj').setup({--[[ your config ]]})
+  end,
+})
+
+use("christoomey/vim-tmux-navigator") -- tmux & split window navigator 
+use("BurntSushi/ripgrep") -- ripgrep
+
+use({
+    "kylechui/nvim-surround",
+    tag = "*", -- Use for stability; omit to use `main` branch for the latest features
+    config = function()
+        require("nvim-surround").setup({
+            -- Configuration here, or leave empty to use defaults
+        })
+    end
+})
+
 use "nvim-lua/plenary.nvim" -- don't forget to add this one if you don't have it yet!
 use {
     "ThePrimeagen/harpoon",
@@ -30,8 +57,13 @@ use('tpope/vim-fugitive')
 use('neovim/nvim-lspconfig')
 use('jose-elias-alvarez/null-ls.nvim')
 use('MunifTanjim/prettier.nvim')
-use('vim-airline/vim-airline')
-use('vim-airline/vim-airline-themes')
+use 'nvim-tree/nvim-web-devicons'
+-- lualine
+use {
+  'nvim-lualine/lualine.nvim',
+  requires = { 'nvim-tree/nvim-web-devicons', opt = true }
+}
+
 use {
     'numToStr/Comment.nvim',
     config = function()
@@ -42,6 +74,7 @@ use 'nvim-treesitter/nvim-treesitter-context'
 use {"akinsho/toggleterm.nvim", tag = '*', config = function()
   require("toggleterm").setup()
 end}
+
 use {
 	'VonHeikemen/lsp-zero.nvim',
 	branch = 'v2.x',
@@ -65,9 +98,8 @@ use {
 use {
   "nvim-neo-tree/neo-tree.nvim",
     branch = "v3.x",
-    requires = { 
+    requires = {
       "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
       "MunifTanjim/nui.nvim",
       -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
       {
@@ -117,6 +149,19 @@ use {
         --           return a.type > b.type
         --       end
         --   end , -- this sorts files and directories descendantly
+        event_handlers = {
+
+          {
+            event = "file_opened",
+            handler = function(file_path)
+              -- auto close
+              -- vimc.cmd("Neotree close")
+              -- OR
+              require("neo-tree.command").execute({ action = "close" })
+            end
+          },
+
+        },
         default_component_configs = {
           container = {
             enable_character_fade = true
@@ -201,8 +246,8 @@ use {
             nowait = true,
           },
           mappings = {
-            ["<space>"] = { 
-                "toggle_node", 
+            ["<space>"] = {
+                "toggle_node",
                 nowait = false, -- disable `nowait` if you have existing combos starting with this char that you want to use 
             },
             ["<2-LeftMouse>"] = "open",
@@ -224,7 +269,7 @@ use {
             -- ['C'] = 'close_all_subnodes',
             ["z"] = "close_all_nodes",
             --["Z"] = "expand_all_nodes",
-            ["a"] = { 
+            ["a"] = {
               "add",
               -- this command supports BASH style brace expansion ("x{a,b,c}" -> xa,xb,xc). see `:h neo-tree-file-actions` for details
               -- some commands may take optional config options, see `:h neo-tree-mappings` for details
@@ -367,8 +412,8 @@ use {
               ["ot"] = { "order_by_type", nowait = false },
             }
           }
-        }
-      })
+        },
+     })
 
       vim.cmd([[nnoremap \ :Neotree reveal<cr>]])
     end

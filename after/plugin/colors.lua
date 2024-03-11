@@ -2,7 +2,7 @@
 function ColorMyPencils(color)
 	-- color = color or "rose-pine"
 	-- color = color or "kanagawa-wave"
-	color = color or "darcula-solid"
+	color = color or "kanagawa"
     vim.cmd.set("termguicolors")
 	vim.cmd.colorscheme(color)
 
