@@ -20,7 +20,7 @@ require('gitsigns').setup {
   current_line_blame_opts = {
     virt_text = true,
     virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
-    delay = 1000,
+    delay = 100,
     ignore_whitespace = false,
     virt_text_priority = 100,
   },
@@ -36,9 +36,6 @@ require('gitsigns').setup {
     relative = 'cursor',
     row = 0,
     col = 1,
-  },
-  yadm = {
-    enable = false
   },
 
   on_attach = function(bufnr)
@@ -73,7 +70,7 @@ require('gitsigns').setup {
     map('n', '<leader>hR', gs.reset_buffer)
     map('n', '<leader>hp', gs.preview_hunk)
     map('n', '<leader>hb', function() gs.blame_line{full=true} end)
-    map('n', '<leader>tb', gs.toggle_current_line_blame)
+    map('n', '<leader>lb', gs.toggle_current_line_blame)
     map('n', '<leader>hd', gs.diffthis)
     map('n', '<leader>hD', function() gs.diffthis('~') end)
     map('n', '<leader>td', gs.toggle_deleted)

@@ -3,11 +3,21 @@ local lsp = require("lsp-zero")
 lsp.preset("recommended")
 
 lsp.ensure_installed({
-  'tsserver',
+  'ts_ls',
   'eslint',
 })
 
-require'lspconfig'.pyright.setup{}
+require'lspconfig'.pyright.setup{
+    settings = {
+        python = {
+            analysis = {
+                typeCheckingMode = "off",  -- Disable type checking (optional)
+                reportOptionalMemberAccess = "none"  -- Disable "Optional member access" warning
+            }
+        }
+    }
+}
+
 
 -- Fix Undefined global 'vim'
 lsp.nvim_workspace()
@@ -51,11 +61,27 @@ lsp.on_attach(function(client, bufnr)
   vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
   vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
   vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-  vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+  vim.keymap.set("i", "<C-k>", function() vim.lsp.buf.signature_help() end, opts)
 end)
 
 lsp.setup()
 
+-- Initial configuration
+local virtual_text = false
+
+-- Function to toggle virtual_text
+function ToggleVirtualText()
+    virtual_text = not virtual_text
+    vim.diagnostic.config({
+        virtual_text = virtual_text
+    })
+    print("Virtual Text: " .. tostring(virtual_text))
+end
+
+-- Initial setup
 vim.diagnostic.config({
-    virtual_text = true
+    virtual_text = virtual_text
 })
+
+-- Create a keymap to toggle virtual_text (optional)
+vim.api.nvim_set_keymap('n', '<leader>tv', ':lua ToggleVirtualText()<CR>', { noremap = true, silent = true })
